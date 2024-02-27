@@ -5,7 +5,6 @@ import desktopDivider from "@/assets/images/pattern-divider-desktop.svg";
 import diceImage from "@/assets/images/icon-dice.svg";
 import Image from "next/image";
 import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
 
 type SlipData = {
   slip: {
@@ -17,8 +16,6 @@ type SlipData = {
 export default function Home() {
   const api = `https://api.adviceslip.com/advice/${generateRandomNumber()}`;
 
-  const [isFetched, setIsFetched] = useState(true);
-
   const { isLoading, data, refetch } = useQuery<SlipData>(
     "diceData",
     async () => {
@@ -26,13 +23,9 @@ export default function Home() {
       return await res.json();
     },
     {
-      enabled: isFetched,
+      staleTime: Infinity,
     }
   );
-
-  useEffect(() => {
-    setIsFetched(false);
-  }, []);
 
   function handleRefetch() {
     refetch();
